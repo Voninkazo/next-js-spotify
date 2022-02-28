@@ -1,9 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import React from 'react'
 import styled from 'styled-components';
+import debounce from 'lodash.debounce';
+
 
 const AppContainer = styled.div`
 `;
@@ -63,8 +65,8 @@ const FormComponent = styled.div`
   }
 `;
 
-const ARTIST_TOKEN = 'BQBxVkoFGCJe4X0zY6rp_9jzMQP5KM0XUb7AX_iPQcT37UavKz1qTI_-NJWLijoQ2I1dOr9zAC7MGDmjZEwdWRSSeCaq3siD2ZYa2M83Rt-8t6V3Ypz-eS3cx8wz_XRR9-xNVaqqHIYsKExVpzprMq7aOOuuSFhv_Do';
-const TRACKS_TOKEN = 'BQBfoITHqf7TlTMZbFmJMTyXbvghyzOFipgQFHwumRcBagN0OpIw2l0K39ACKC6SkOUIRhcuYvv_W0xf0a2hV0CpHXEk-XACYj97DhzsKDpu5fk9rIYyahrydCay8UXlw8Vk77NzDU-e2InK4p6LrRPaieBP7wQLDgA';
+const ARTIST_TOKEN = 'BQA_lNc-JUckKdtXC5CFAgXbsFZzxl_M7aHIEsDTxd5byLtXXdsRJe8F9EUZPUt9aB8sCFIQnrTHTrQa93FGy6WqgzLrP77mUB2UCCHvk6iEFHhzwHKcwDw-WrzUfa6-_o8qV1wwMx-xxtBwFRL3t5IjCYr3bl3O82I';
+const TRACKS_TOKEN = 'BQCegdinmcx1OgV5p_LY4AaZKYYyJmn7Mgr_MYBBJHj6x1ktvKRuhMd-MIxTeiiYV9loUmcEx6Rcdpp0gK5sGUoeEPIUu7v4xK1j0DRVhOZXLdXpmoeGAuIUb3LA0lG6JmkR34lvmVsy3GE1qmtq4TmM_ySZAaz1fWk';
 interface ResponseType {
   artists: {
     items: [
@@ -98,6 +100,7 @@ interface TracksType {
 const Home: NextPage = ({ artists }: any) => {
   console.log(artists, 'artists')
   const [inputValue, setInputValue] = useState('');
+  const [artistId, setArtistId] = useState('');
   const [artistData, setArtistData] = useState<ArtistType>({
     items: [
       {
@@ -105,7 +108,7 @@ const Home: NextPage = ({ artists }: any) => {
       }
     ]
   });
-  const [tracks, setTracks] = useState<TracksType>({
+  const [topTracks, setTopTracks] = useState<TracksType>({
     tracks: [
       {
         name: ''
@@ -148,23 +151,39 @@ const Home: NextPage = ({ artists }: any) => {
 
     const artistEndpoint = `https://api.spotify.com/v1/search?q=${inputText}&type=artist&limit=1`;
     const fetchedArtist = await fetchData(artistEndpoint, options);
-    fetchedArtist && setArtistData(fetchedArtist.artists);
-    console.log(fetchedArtist?.artists, 'artitst')
-    console.log(artistData && artistData.items[0].id, 'ID');
-    const albumsEndpoint = `	https://api.spotify.com/v1/artists/${artistData && artistData.items[0].id}/top-tracks?market=ES`;
+    fetchedArtist && setArtistData(fetchedArtist?.artists);
+    fetchedArtist && setArtistId(fetchedArtist?.artists?.items?.[0]?.id);
 
-    const tracksData = await fetchData(albumsEndpoint, options2);
-    console.log(tracksData, 'tracks');
-    tracksData && setTracks(tracksData);
+    console.log(fetchedArtist?.artists, 'artitst');
   }
 
+  async function fetchTracks() {
+      console.log(artistId, 'ID');
+      const albumsEndpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`;
+
+      const tracksData = await fetchData(albumsEndpoint, options2);
+      console.log(tracksData, 'tracks');
+      tracksData && setTopTracks(tracksData);
+  }
+
+  function searchFunction() {
+    submitSearch(inputValue)
+    if(artistId) {
+      fetchTracks()
+    }
+  }
+
+  const debouncedFilter = useCallback(debounce(() => searchFunction(), 500), [inputValue])
+  
+  const handleSearch = () => {
+      debouncedFilter();
+  }
 
   useEffect(() => {
-    submitSearch(inputValue)
+    handleSearch();
   }, [inputValue])
 
-
-  console.log(tracks.tracks, 'allllllll')
+  console.log(topTracks.tracks, 'allllllll')
   return (
     <AppContainer>
       <Head>
@@ -203,7 +222,7 @@ const Home: NextPage = ({ artists }: any) => {
               <p>{artist.name}</p>
               <div>
                 {
-                 tracks &&  tracks.tracks.map((track: any, index) => {
+                  topTracks && topTracks.tracks.map((track: any, index) => {
                     return (
                       <p key={index}>{track.name}</p>
                     )
