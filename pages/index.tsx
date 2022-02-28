@@ -63,56 +63,99 @@ const FormComponent = styled.div`
   }
 `;
 
-const TOKEN = 'BQBBG1l7hDkX1UJBN7neeAewlLZCEmpDgo4LRrqDltjwyqKdaaBQrw83fN-NWI5iqQmoWcM5y497AWdb86YzV9-Pl_RXeCdsounIBFQVCmCp21GHXvYVUDXZRnZxQeS0p_J5cBg_bdBvWAIGAOjT4Nf-4a9x1YgfMf4';
+const ARTIST_TOKEN = 'BQBxVkoFGCJe4X0zY6rp_9jzMQP5KM0XUb7AX_iPQcT37UavKz1qTI_-NJWLijoQ2I1dOr9zAC7MGDmjZEwdWRSSeCaq3siD2ZYa2M83Rt-8t6V3Ypz-eS3cx8wz_XRR9-xNVaqqHIYsKExVpzprMq7aOOuuSFhv_Do';
+const TRACKS_TOKEN = 'BQBfoITHqf7TlTMZbFmJMTyXbvghyzOFipgQFHwumRcBagN0OpIw2l0K39ACKC6SkOUIRhcuYvv_W0xf0a2hV0CpHXEk-XACYj97DhzsKDpu5fk9rIYyahrydCay8UXlw8Vk77NzDU-e2InK4p6LrRPaieBP7wQLDgA';
 interface ResponseType {
   artists: {
-    items: []
-  }
+    items: [
+      {
+        id: string
+      }
+    ]
+  },
+  tracks: [
+    {
+      name: string
+    }
+  ]
 }
-
 
 interface ArtistType {
-  items: []
+  items: [
+    {
+      id: string
+    }
+  ]
 }
 
-const Home: NextPage = ({artists}: any) => {
+interface TracksType {
+  tracks: [
+    {
+      name: string
+    }
+  ]
+}
+const Home: NextPage = ({ artists }: any) => {
   console.log(artists, 'artists')
   const [inputValue, setInputValue] = useState('');
   const [artistData, setArtistData] = useState<ArtistType>({
-    items: []
+    items: [
+      {
+        id: ''
+      }
+    ]
   });
+  const [tracks, setTracks] = useState<TracksType>({
+    tracks: [
+      {
+        name: ''
+      }
+    ]
+  })
 
   const options = {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${TOKEN}`
+      'Authorization': `Bearer ${ARTIST_TOKEN}`
+    }
+  }
+  const options2 = {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${TRACKS_TOKEN}`
     }
   }
 
-  async function fetchData(endpoint: string):Promise<ResponseType| undefined>  {
+  async function fetchData(endpoint: string, options: {}): Promise<ResponseType | undefined> {
     try {
-    const res = await fetch(endpoint, options);
-    const response = await res.json();
-    return response;
+      const res = await fetch(endpoint, options);
+      const response = await res.json();
+      return response;
     }
-    catch(err) {
-     console.log(err);
+    catch (err) {
+      console.log(err);
     }
-     
+
   }
 
-   async function submitSearch(inputText: string, event?: React.FormEvent<HTMLElement>):Promise<void> {
+  async function submitSearch(inputText: string, event?: React.FormEvent<HTMLElement>): Promise<void> {
     console.log(inputText);
     event?.preventDefault();
 
-    //	https://api.spotify.com/v1/artists/7sfgqEdoeBTjd8lQsPT3Cy/albums
-
     const artistEndpoint = `https://api.spotify.com/v1/search?q=${inputText}&type=artist&limit=1`;
-    const responseData = await fetchData(artistEndpoint);
-    console.log(responseData);
-    responseData && setArtistData(responseData.artists) 
+    const fetchedArtist = await fetchData(artistEndpoint, options);
+    fetchedArtist && setArtistData(fetchedArtist.artists);
+    console.log(fetchedArtist?.artists, 'artitst')
+    console.log(artistData && artistData.items[0].id, 'ID');
+    const albumsEndpoint = `	https://api.spotify.com/v1/artists/${artistData && artistData.items[0].id}/top-tracks?market=ES`;
+
+    const tracksData = await fetchData(albumsEndpoint, options2);
+    console.log(tracksData, 'tracks');
+    tracksData && setTracks(tracksData);
   }
 
 
@@ -121,6 +164,7 @@ const Home: NextPage = ({artists}: any) => {
   }, [inputValue])
 
 
+  console.log(tracks.tracks, 'allllllll')
   return (
     <AppContainer>
       <Head>
@@ -130,7 +174,7 @@ const Home: NextPage = ({artists}: any) => {
       </Head>
       <header className="header">
         <FormComponent>
-          <form id="search-form" onSubmit={ (event) => submitSearch(inputValue, event)}>
+          <form id="search-form" onSubmit={(event) => submitSearch(inputValue, event)}>
             <input type="search" id="site-search" name="q"
               aria-label="Search for an artist..."
               value={inputValue}
@@ -138,7 +182,7 @@ const Home: NextPage = ({artists}: any) => {
               className="input-search-form"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setInputValue(e.target.value)}
-                 />
+            />
             <div className="search-button">
               <button className="btn btn-search" aria-label="Search" type="submit">
                 <i className="mobile-icon-search hide-tablet"></i>
@@ -151,12 +195,21 @@ const Home: NextPage = ({artists}: any) => {
         </FormComponent>
       </header>
 
-      <main style={{padding:'16px'}}>
+      <main style={{ padding: '16px' }}>
         <div>
           {artistData && artistData.items.map((artist: any) =>
           (
             <div key={artist.id}>
               <p>{artist.name}</p>
+              <div>
+                {
+                 tracks &&  tracks.tracks.map((track: any, index) => {
+                    return (
+                      <p key={index}>{track.name}</p>
+                    )
+                  })
+                }
+              </div>
             </div>
           )
           )}
@@ -169,7 +222,7 @@ const Home: NextPage = ({artists}: any) => {
 export default Home
 
 export async function getStaticProps() {
-  return  {
+  return {
     props: {
       artists: ["test2", "tets2"]
     }
