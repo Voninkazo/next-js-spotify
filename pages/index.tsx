@@ -65,13 +65,14 @@ const FormComponent = styled.div`
   }
 `;
 
-const ARTIST_TOKEN = 'BQA_lNc-JUckKdtXC5CFAgXbsFZzxl_M7aHIEsDTxd5byLtXXdsRJe8F9EUZPUt9aB8sCFIQnrTHTrQa93FGy6WqgzLrP77mUB2UCCHvk6iEFHhzwHKcwDw-WrzUfa6-_o8qV1wwMx-xxtBwFRL3t5IjCYr3bl3O82I';
-const TRACKS_TOKEN = 'BQCegdinmcx1OgV5p_LY4AaZKYYyJmn7Mgr_MYBBJHj6x1ktvKRuhMd-MIxTeiiYV9loUmcEx6Rcdpp0gK5sGUoeEPIUu7v4xK1j0DRVhOZXLdXpmoeGAuIUb3LA0lG6JmkR34lvmVsy3GE1qmtq4TmM_ySZAaz1fWk';
+const ARTIST_TOKEN = 'BQAWkNt4YlCnWgdeaHMn72VdiMXBrwYlSRvQAr9yxbeDdZRN3O__-L424S1WBZTqowHF7Ok3MFjP5vIJ_TvoS_6EVatvMvRANkc0pg6GXVylpeni0_0O27xZHf6Nfow8sILxemeT7tpDoZpale7U-qf8jDSIOdba5aE';
+const TRACKS_TOKEN = 'BQCokD2-NWhn7ajoWSoWvr_rv4rpvNWRQyu6oZCY62r5HFKAwKUD4fEpD81_rDnX0uWm1l1Nic5ue-BmFYnBH1DCvCpCOVd20Ljb7_D--qk5_3MKtsi_dBcmZ9Qn2DuD_cNd6Uf1CAvyIwJwOTbk7WFlxoyC0-E1h3o';
 interface ResponseType {
   artists: {
     items: [
       {
-        id: string
+        id: string;
+        images: [];
       }
     ]
   },
@@ -85,9 +86,16 @@ interface ResponseType {
 interface ArtistType {
   items: [
     {
-      id: string
+      id: string;
+      images: [];
     }
   ]
+}
+
+interface ImageTypes {
+  url: string;
+  width: string;
+  height: string;
 }
 
 interface TracksType {
@@ -101,10 +109,16 @@ const Home: NextPage = ({ artists }: any) => {
   console.log(artists, 'artists')
   const [inputValue, setInputValue] = useState('');
   const [artistId, setArtistId] = useState('');
+  const [artistProfile, setArtistProfile] = useState<ImageTypes[]>([{
+    url: '',
+    width: '',
+    height: ''
+  }]);
   const [artistData, setArtistData] = useState<ArtistType>({
     items: [
       {
-        id: ''
+        id: '',
+        images: []
       }
     ]
   });
@@ -153,37 +167,35 @@ const Home: NextPage = ({ artists }: any) => {
     const fetchedArtist = await fetchData(artistEndpoint, options);
     fetchedArtist && setArtistData(fetchedArtist?.artists);
     fetchedArtist && setArtistId(fetchedArtist?.artists?.items?.[0]?.id);
-
-    console.log(fetchedArtist?.artists, 'artitst');
+    fetchedArtist && setArtistProfile(fetchedArtist?.artists?.items?.[0]?.images);
   }
 
   async function fetchTracks() {
-      console.log(artistId, 'ID');
-      const albumsEndpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`;
+    console.log(artistId, 'ID');
+    const albumsEndpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`;
 
-      const tracksData = await fetchData(albumsEndpoint, options2);
-      console.log(tracksData, 'tracks');
-      tracksData && setTopTracks(tracksData);
+    const tracksData = await fetchData(albumsEndpoint, options2);
+    console.log(tracksData, 'tracks');
+    tracksData && setTopTracks(tracksData);
   }
 
   function searchFunction() {
     submitSearch(inputValue)
-    if(artistId) {
+    if (artistId) {
       fetchTracks()
     }
   }
 
-  const debouncedFilter = useCallback(debounce(() => searchFunction(), 500), [inputValue])
-  
-  const handleSearch = () => {
-      debouncedFilter();
-  }
+  // const debouncedFilter = useCallback(debounce(() => searchFunction(), 500), [inputValue])
 
+  // const handleSearch = () => {
+  //     debouncedFilter();
+  // } 
   useEffect(() => {
-    handleSearch();
+    searchFunction()
   }, [inputValue])
 
-  console.log(topTracks.tracks, 'allllllll')
+  console.log(topTracks, 'allllllll')
   return (
     <AppContainer>
       <Head>
@@ -219,12 +231,18 @@ const Home: NextPage = ({ artists }: any) => {
           {artistData && artistData.items.map((artist: any) =>
           (
             <div key={artist.id}>
-              <p>{artist.name}</p>
+              <a href={`/${artistId}`}>{artist.name}</a>
+              {/* { artistProfile && artistProfile.length && <Image src={artistProfile[0].url} width={100} height={100}  />} */}
+              {/* { artistProfile && artistData && <Image loader={GraphCMSImageLoader} src={artistProfile[0].url} />} */}
               <div>
                 {
                   topTracks && topTracks.tracks.map((track: any, index) => {
                     return (
-                      <p key={index}>{track.name}</p>
+                      <div key={index}>
+                        <ul>
+                          <li>{track.name}</li>
+                        </ul>
+                      </div>
                     )
                   })
                 }
