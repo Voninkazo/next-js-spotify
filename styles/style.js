@@ -6,7 +6,7 @@ export const AppContainer = styled.div`
 export const FormComponent = styled.div`
   background-color: #fff;
   padding: 16px;
-  border-bottom: 1px solid #DADFE3;
+  //border-bottom: 1px solid #DADFE3;
   // position: fixed;
   // z-index: 1000;
   width: 100%;

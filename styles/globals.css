@@ -14,3 +14,59 @@ a {
 * {
   box-sizing: border-box;
 }
+
+
+ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.songs ul li .song-wrapper {
+display: flex;
+flex-direction: row;
+gap: 24px;
+align-items: center;
+}
+
+.songs ul li .img-container .play-btn {
+  display: none;
+  position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 999;
+    top: 40%;
+}
+.songs ul li .img-container {
+  position:relative;
+}
+
+.songs ul li {
+  padding: 16px 24px;
+}
+
+.songs ul li .song-wrapper:hover {
+  background-color: rgba(75, 74, 74, .1);
+}
+
+.songs ul li .song-wrapper:hover #play-btn {
+  display: block;
+}
+
+.artist-profile {
+  padding: 20px;
+  background-color: rgba(75, 74, 74, .1);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.artist-profile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}

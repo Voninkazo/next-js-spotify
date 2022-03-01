@@ -13,6 +13,10 @@ type ResponseType = {
     tracks: [
         {
             name: string
+            album: {
+                images: []
+            },
+            preview_url: string
         }
     ]
 }
@@ -34,13 +38,17 @@ type TracksType = {
     tracks: [
         {
             name: string
+            album: {
+                images: []
+            }
+            preview_url: string
         }
     ]
 }
 type ContextProps = {
     artistData: ArtistType
     artistId: string
-    //artistProfile: ImageTypes
+    // artistProfile: ImageTypes
     topTracks: TracksType
     inputValue: string
     setInputValue?: (input: string) => void
@@ -59,11 +67,15 @@ const GlobalContext = createContext<ContextProps>({
         ]
     },
     artistId: '',
-   // artistProfile: '',
+//    artistProfile: [{url: ''}],
     topTracks:{
         tracks: [
             {
-                name: ''
+                name: '',
+                album: {
+                    images: [],
+                },
+                preview_url: ''
             }
         ]
     },
@@ -128,7 +140,11 @@ export const SongProvider: React.FC<SongProviderProps> = ({
     const [topTracks, setTopTracks] = useState<TracksType>({
         tracks: [
             {
-                name: ''
+                name: '',
+                album: {
+                    images: [],
+                },
+                preview_url:''
             }
         ]
     })
@@ -162,6 +178,8 @@ export const SongProvider: React.FC<SongProviderProps> = ({
     }
 
     console.log(artistProfile, 'allllllll')
+    console.log(topTracks, 'toptracks')
+
     const contextValues = {
         artistData,
         artistId,
