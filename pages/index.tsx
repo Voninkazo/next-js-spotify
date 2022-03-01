@@ -1,203 +1,23 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image';
-import { useEffect, useState, useCallback } from 'react';
-import React from 'react'
-import styled from 'styled-components';
-import debounce from 'lodash.debounce';
+import React, { useContext, useEffect } from 'react'
+import GlobalContext from '../context/context';
+import { AppContainer, FormComponent } from '../styles/style';
 
 
-const AppContainer = styled.div`
-`;
 
-const FormComponent = styled.div`
-  background-color: #fff;
-  padding: 16px;
-  border-bottom: 1px solid #DADFE3;
-  // position: fixed;
-  // z-index: 1000;
-  width: 100%;
-  form {
-    display: flex;
-    flex-direction: row;
-    border-radius: 4px;
-    border: solid 1px #d5d8da;
-    background-color: #fff;
-    input {
-      padding: 6px 13px;
-      border: none;
-      width: 100%;
-      height: 40px;
-    }
-    .search-button {
-      padding-right: 16px;
-      padding-top: 5px;
-      width: 10%;
-    }
-    button {
-      border: none;
-      background-color: #fff;
-    }
-    button span {
-      display: none;
-    }
-    input:focus {
-    outline: 0;
-    box-shadow: 0px 0px 5px rgb(2 184 117 / 60%);
-    }
-  }
-  button .mobile-icon-search::before {
-  content: "\f2a4";
-  display: inline-block;
-  font-family: "glyphs";
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  line-height: 1;
-  text-decoration: inherit;
-  text-rendering: optimizeLegibility;
-  text-transform: none;
-  height: 20px;
-  width: 20px;
-  background-image: url('/search-icon.svg');
-  background-size: 24px;
-  background-repeat: no-repeat;
-  }
-`;
-
-const ARTIST_TOKEN = 'BQAWkNt4YlCnWgdeaHMn72VdiMXBrwYlSRvQAr9yxbeDdZRN3O__-L424S1WBZTqowHF7Ok3MFjP5vIJ_TvoS_6EVatvMvRANkc0pg6GXVylpeni0_0O27xZHf6Nfow8sILxemeT7tpDoZpale7U-qf8jDSIOdba5aE';
-const TRACKS_TOKEN = 'BQCokD2-NWhn7ajoWSoWvr_rv4rpvNWRQyu6oZCY62r5HFKAwKUD4fEpD81_rDnX0uWm1l1Nic5ue-BmFYnBH1DCvCpCOVd20Ljb7_D--qk5_3MKtsi_dBcmZ9Qn2DuD_cNd6Uf1CAvyIwJwOTbk7WFlxoyC0-E1h3o';
-interface ResponseType {
-  artists: {
-    items: [
-      {
-        id: string;
-        images: [];
-      }
-    ]
-  },
-  tracks: [
-    {
-      name: string
-    }
-  ]
-}
-
-interface ArtistType {
-  items: [
-    {
-      id: string;
-      images: [];
-    }
-  ]
-}
-
-interface ImageTypes {
-  url: string;
-  width: string;
-  height: string;
-}
-
-interface TracksType {
-  tracks: [
-    {
-      name: string
-    }
-  ]
-}
 const Home: NextPage = ({ artists }: any) => {
   console.log(artists, 'artists')
-  const [inputValue, setInputValue] = useState('');
-  const [artistId, setArtistId] = useState('');
-  const [artistProfile, setArtistProfile] = useState<ImageTypes[]>([{
-    url: '',
-    width: '',
-    height: ''
-  }]);
-  const [artistData, setArtistData] = useState<ArtistType>({
-    items: [
-      {
-        id: '',
-        images: []
-      }
-    ]
-  });
-  const [topTracks, setTopTracks] = useState<TracksType>({
-    tracks: [
-      {
-        name: ''
-      }
-    ]
-  })
+  const {inputValue, setInputValue, searchFunction,artistData, topTracks, artistId} = useContext(GlobalContext)
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${ARTIST_TOKEN}`
-    }
-  }
-  const options2 = {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${TRACKS_TOKEN}`
-    }
-  }
-
-  async function fetchData(endpoint: string, options: {}): Promise<ResponseType | undefined> {
-    try {
-      const res = await fetch(endpoint, options);
-      const response = await res.json();
-      return response;
-    }
-    catch (err) {
-      console.log(err);
-    }
-
-  }
-
-  async function submitSearch(inputText: string, event?: React.FormEvent<HTMLElement>): Promise<void> {
-    console.log(inputText);
-    event?.preventDefault();
-
-    const artistEndpoint = `https://api.spotify.com/v1/search?q=${inputText}&type=artist&limit=1`;
-    const fetchedArtist = await fetchData(artistEndpoint, options);
-    fetchedArtist && setArtistData(fetchedArtist?.artists);
-    fetchedArtist && setArtistId(fetchedArtist?.artists?.items?.[0]?.id);
-    fetchedArtist && setArtistProfile(fetchedArtist?.artists?.items?.[0]?.images);
-  }
-
-  async function fetchTracks() {
-    console.log(artistId, 'ID');
-    const albumsEndpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`;
-
-    const tracksData = await fetchData(albumsEndpoint, options2);
-    console.log(tracksData, 'tracks');
-    tracksData && setTopTracks(tracksData);
-  }
-
-  function searchFunction() {
-    submitSearch(inputValue)
-    if (artistId) {
-      fetchTracks()
-    }
-  }
-
-  // const debouncedFilter = useCallback(debounce(() => searchFunction(), 500), [inputValue])
-
-  // const handleSearch = () => {
-  //     debouncedFilter();
-  // } 
+console.log(inputValue, 'inputValue')
   useEffect(() => {
     searchFunction()
-  }, [inputValue])
+}, [inputValue])
 
-  console.log(topTracks, 'allllllll')
   return (
-    <AppContainer>
+      <AppContainer>
       <Head>
         <title>Spotify App</title>
         <meta name="description" content="Generated by create next app" />
@@ -205,14 +25,14 @@ const Home: NextPage = ({ artists }: any) => {
       </Head>
       <header className="header">
         <FormComponent>
-          <form id="search-form" onSubmit={(event) => submitSearch(inputValue, event)}>
+          <form id="search-form">
             <input type="search" id="site-search" name="q"
               aria-label="Search for an artist..."
               value={inputValue}
               placeholder="Search for an artist..."
               className="input-search-form"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setInputValue(e.target.value)}
+                setInputValue && setInputValue(e.target.value)}
             />
             <div className="search-button">
               <button className="btn btn-search" aria-label="Search" type="submit">
@@ -232,11 +52,11 @@ const Home: NextPage = ({ artists }: any) => {
           (
             <div key={artist.id}>
               <a href={`/${artistId}`}>{artist.name}</a>
-              {/* { artistProfile && artistProfile.length && <Image src={artistProfile[0].url} width={100} height={100}  />} */}
+             <Image src="https://i.scdn.co/image/ab67616100005174ceead049d538f0b5087041dd" width={100} height={100}  />
               {/* { artistProfile && artistData && <Image loader={GraphCMSImageLoader} src={artistProfile[0].url} />} */}
               <div>
                 {
-                  topTracks && topTracks.tracks.map((track: any, index) => {
+                  topTracks && topTracks.tracks.map((track: any, index: number) => {
                     return (
                       <div key={index}>
                         <ul>

@@ -1,8 +1,14 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import type { AppProps } from 'next/app';
+import { SongProvider } from '../context/context';
+
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <SongProvider>
+      <Component {...pageProps} />
+    </SongProvider>
+ )
 }
 
 export default MyApp
