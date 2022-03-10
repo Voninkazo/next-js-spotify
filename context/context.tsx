@@ -48,7 +48,7 @@ type TracksType = {
 type ContextProps = {
     artistData: ArtistType
     artistId: string
-    // artistProfile: ImageTypes
+    artistProfile: any
     topTracks: TracksType
     inputValue: string
     setInputValue?: (input: string) => void
@@ -67,7 +67,7 @@ const GlobalContext = createContext<ContextProps>({
         ]
     },
     artistId: '',
-//    artistProfile: [{url: ''}],
+    artistProfile: {url: ''},
     topTracks:{
         tracks: [
             {
@@ -120,7 +120,6 @@ export const SongProvider: React.FC<SongProviderProps> = ({
     children,
 
 }) => {
-    // states
 
     const [inputValue, setInputValue] = useState('');
     const [artistId, setArtistId] = useState('');
@@ -149,11 +148,8 @@ export const SongProvider: React.FC<SongProviderProps> = ({
         ]
     })
 
-
     async function submitSearch(inputText: string, event?: React.FormEvent<HTMLElement>): Promise<void> {
-        console.log(inputText);
         event?.preventDefault();
-
         const artistEndpoint = `https://api.spotify.com/v1/search?q=${inputText}&type=artist&limit=1`;
         const fetchedArtist = await fetchData(artistEndpoint, options);
         fetchedArtist && setArtistData(fetchedArtist?.artists);
@@ -162,32 +158,26 @@ export const SongProvider: React.FC<SongProviderProps> = ({
     }
 
     async function fetchTracks() {
-        console.log(artistId, 'ID');
         const albumsEndpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`;
-
         const tracksData = await fetchData(albumsEndpoint, options2);
-        console.log(tracksData, 'tracks');
-        tracksData && setTopTracks(tracksData);
+        tracksData && setTopTracks(tracksData); 
     }
 
     function searchFunction() {
         submitSearch(inputValue)
         if (artistId) {
-            fetchTracks()
+            fetchTracks();
         }
     }
-
-    console.log(artistProfile, 'allllllll')
-    console.log(topTracks, 'toptracks')
 
     const contextValues = {
         artistData,
         artistId,
-       // artistProfile,
         topTracks,
         setInputValue,
         inputValue,
         searchFunction,
+        artistProfile,
     };
 
     return (

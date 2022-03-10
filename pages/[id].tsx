@@ -1,21 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
+import GlobalContext from "../context/context";
 
-const PageDetails = ({id}: any) => {
-    console.log(id)
+const PageDetails = () => {
+    const {artistData, artistProfile} = useContext(GlobalContext);
+    console.log(artistProfile, 'artistData');
+
     return (
         <div>
             <p>details</p>
+            <p>singer name</p>
+            <img src="////" alt="assasa" />
         </div>
     )
-}
-
-export async function getServerSideProps(context: any) {
-  const trackId = context.params.id
-  //const res = await fetch()
-
-    return {
-        props: {id : trackId}
-    }
 }
 
 
