@@ -6,6 +6,7 @@ export function Player({audioSrc}: any) {
         <ReactAudioPlayer 
         src={audioSrc}
         autoPlay
-        controls />
+        controls 
+        />
     )
 }

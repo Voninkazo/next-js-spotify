@@ -9,7 +9,10 @@ import { AppContainer, FormComponent } from '../styles/style';
 
 const Home: NextPage = () => {
 const { inputValue, setInputValue, searchFunction, artistProfile, artistData, topTracks, artistId } = useContext(GlobalContext);
-const [song,setSong] = useState('https://p.scdn.co/mp3-preview/162aa14ef717ba15eb666d76421f8202ac11fe35?cid=774b29d4f13844c495f206cafdad9c86');
+const defaultSongUrl = topTracks && topTracks.tracks[0]?.preview_url;
+console.log(defaultSongUrl, 'defaultSongUrl')
+const [song,setSong] = useState(defaultSongUrl);
+const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     searchFunction();
@@ -17,6 +20,10 @@ const [song,setSong] = useState('https://p.scdn.co/mp3-preview/162aa14ef717ba15e
 
   
 console.log(topTracks)
+
+function setPlyState() {
+  setIsPlaying(!isPlaying);
+}
 
   return (
     <AppContainer>
@@ -72,7 +79,10 @@ console.log(topTracks)
                             <li key={index} className="song-item">
                               <div className="song-wrapper">
                                 <div className="img-container">
-                                  <button className="play-btn" id="play-btn" value={track.preview_url} onClick={(e:any) => setSong(e.target.value)}>play</button>
+                                  <button className="play-btn" id="play-btn" value={track.preview_url} onClick={(e:any) => {
+                                    setSong(e.target.value),
+                                    setPlyState();
+                                  }}>{isPlaying ? "playing" : "pause"}</button>
                                   {imageSrc && <Image src={imageSrc} width={100} height={100} />}
                                 </div>
                                 <div>
@@ -94,7 +104,11 @@ console.log(topTracks)
           }
           )}
         </div>
-        <Player audioSrc={song}/>
+        <Player 
+        audioSrc={song} 
+       // setIsPlaying= {setIsPlaying}
+        />
+        <button type="button" value="asaa" onClick={() => console.log('next')}>next song</button>
       </main>
     </ AppContainer>
   )
