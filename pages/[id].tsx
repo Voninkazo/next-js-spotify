@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import GlobalContext from "../context/context";
 
 const PageDetails = () => {
     const {artistData, artistProfile} = useContext(GlobalContext);
-    console.log(artistProfile, 'artistData');
+   
+    useEffect(() => {
+        console.log(artistProfile, 'artistData');
+    }, [artistProfile])
 
     return (
         <div>
             <p>details</p>
             <p>singer name</p>
-            <img src="////" alt="assasa" />
+            {/* <img src="////" alt="assasa" /> */}
         </div>
     )
 }
