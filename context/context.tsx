@@ -179,6 +179,7 @@ export const SongProvider: React.FC<SongProviderProps> = ({
         searchFunction,
         artistProfile,
     };
+    console.log(topTracks,'top')
 
     return (
         <GlobalContext.Provider value={contextValues}>

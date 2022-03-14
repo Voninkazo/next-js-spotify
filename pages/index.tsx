@@ -9,8 +9,10 @@ import { AppContainer, FormComponent } from '../styles/style';
 
 const Home: NextPage = () => {
 const { inputValue, setInputValue, searchFunction, artistProfile, artistData, topTracks, artistId } = useContext(GlobalContext);
-const defaultSongUrl = topTracks && topTracks.tracks[0]?.preview_url;
-console.log(defaultSongUrl, 'defaultSongUrl')
+
+const defaultSongUrl = topTracks && topTracks.tracks[0].preview_url;
+console.log(defaultSongUrl, 'defaultSongUrl');
+
 const [song,setSong] = useState(defaultSongUrl);
 const [isPlaying, setIsPlaying] = useState(false);
 
@@ -19,7 +21,8 @@ const [isPlaying, setIsPlaying] = useState(false);
   }, [inputValue])
 
   
-console.log(topTracks)
+console.log(topTracks.tracks, 'topTracks');
+console.log(artistData, 'artistData')
 
 function setPlyState() {
   setIsPlaying(!isPlaying);
@@ -106,7 +109,6 @@ function setPlyState() {
         </div>
         <Player 
         audioSrc={song} 
-       // setIsPlaying= {setIsPlaying}
         />
         <button type="button" value="asaa" onClick={() => console.log('next')}>next song</button>
       </main>
