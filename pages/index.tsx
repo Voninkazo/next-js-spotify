@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
@@ -19,7 +18,6 @@ const Home: NextPage = () => {
   } = useContext(GlobalContext);
 
   const defaultSongUrl = topTracks && topTracks.tracks[0].preview_url;
-  console.log(defaultSongUrl, "defaultSongUrl");
 
   const [song, setSong] = useState(defaultSongUrl);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -28,8 +26,6 @@ const Home: NextPage = () => {
     searchFunction();
   }, [inputValue]);
 
-  console.log(topTracks.tracks, "topTracks");
-  console.log(artistData, "artistData");
 
   function setPlyState() {
     setIsPlaying(!isPlaying);
@@ -37,24 +33,6 @@ const Home: NextPage = () => {
 
   return (
     <AppContainer>
-      <Head>
-        <title>Add a Shopping Cart to Any Website in Minutes - Snipcart</title>
-        <meta
-          name="description"
-          content="Add a shopping cart to your site in minutes. Works with any site builder, CMS, and framework. 20 000+ merchants trust our e-commerce solution for their website. Join them!"
-        />
-        <meta
-          property="og:title"
-          content="Add a Shopping Cart to Any Website in Minutes - Snipcart"
-        />
-        <meta
-          property="og:description"
-          content="Add a shopping cart to your site in minutes. Works with any site builder, CMS, and framework. 20 000+ merchants trust our e-commerce solution for their website. Join them!"
-        />
-        <meta property="og:url" content="https://snipcart.com/" />
-        <meta property="og:type" content="website" />
-      </Head>
-
       <header className="header">
         <FormComponent>
           <form id="search-form">

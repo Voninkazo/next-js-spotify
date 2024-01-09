@@ -1,28 +1,10 @@
 import React from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { AppContainer, FormComponent } from "../styles/style";
 
 const About: NextPage = () => {
   return (
     <AppContainer>
-      <Head>
-        <title>About</title>
-        <meta
-          name="description"
-          content="About desc"
-        />
-        <meta
-          property="og:title"
-          content="About something"
-        />
-        <meta
-          property="og:description"
-          content="About desc"
-        />
-        <meta property="og:url" content="https://snipcart.com/" />
-        <meta property="og:type" content="website" />
-      </Head>
       <header className="header">
         <FormComponent>
           <form id="search-form">
