@@ -6,11 +6,11 @@ import { AppContainer, FormComponent } from "../styles/style";
 const About: NextPage = () => {
   return (
     <AppContainer>
-      <Head>
+      {/* <Head>
         <title>Spotify Music App</title>
         <meta name="keywords" content="music, streaming, entertainment" />
         <link rel="icon" href="/favicon.ico" />
-      </Head>
+      </Head> */}
       <header className="header">
         <FormComponent>
           <form id="search-form">
