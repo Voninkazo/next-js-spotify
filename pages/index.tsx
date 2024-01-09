@@ -1,119 +1,166 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useContext, useEffect, useState } from 'react'
-import { Player } from '../components/Player';
-import GlobalContext from '../context/context';
-import { AppContainer, FormComponent } from '../styles/style';
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useContext, useEffect, useState } from "react";
+import { Player } from "../components/Player";
+import GlobalContext from "../context/context";
+import { AppContainer, FormComponent } from "../styles/style";
 
 const Home: NextPage = () => {
-const { inputValue, setInputValue, searchFunction, artistProfile, artistData, topTracks, artistId } = useContext(GlobalContext);
+  const {
+    inputValue,
+    setInputValue,
+    searchFunction,
+    artistProfile,
+    artistData,
+    topTracks,
+    artistId,
+  } = useContext(GlobalContext);
 
-const defaultSongUrl = topTracks && topTracks.tracks[0].preview_url;
-console.log(defaultSongUrl, 'defaultSongUrl');
+  const defaultSongUrl = topTracks && topTracks.tracks[0].preview_url;
+  console.log(defaultSongUrl, "defaultSongUrl");
 
-const [song,setSong] = useState(defaultSongUrl);
-const [isPlaying, setIsPlaying] = useState(false);
+  const [song, setSong] = useState(defaultSongUrl);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     searchFunction();
-  }, [inputValue])
+  }, [inputValue]);
 
-  
-console.log(topTracks.tracks, 'topTracks');
-console.log(artistData, 'artistData')
+  console.log(topTracks.tracks, "topTracks");
+  console.log(artistData, "artistData");
 
-function setPlyState() {
-  setIsPlaying(!isPlaying);
-}
+  function setPlyState() {
+    setIsPlaying(!isPlaying);
+  }
 
   return (
     <AppContainer>
-      {/* <Head>
-        <title>Spotify Music App</title>
-        <meta name="keywords" content="music, streaming, entertainment" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
+      <Head>
+        <title>Add a Shopping Cart to Any Website in Minutes - Snipcart</title>
+        <meta
+          name="description"
+          content="Add a shopping cart to your site in minutes. Works with any site builder, CMS, and framework. 20 000+ merchants trust our e-commerce solution for their website. Join them!"
+        />
+        <meta
+          property="og:title"
+          content="Add a Shopping Cart to Any Website in Minutes - Snipcart"
+        />
+        <meta
+          property="og:description"
+          content="Add a shopping cart to your site in minutes. Works with any site builder, CMS, and framework. 20 000+ merchants trust our e-commerce solution for their website. Join them!"
+        />
+        <meta property="og:url" content="https://snipcart.com/" />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <header className="header">
         <FormComponent>
           <form id="search-form">
-            <input type="search" id="site-search" name="q"
+            <input
+              type="search"
+              id="site-search"
+              name="q"
               aria-label="Search for an artist..."
               value={inputValue}
               placeholder="Search for an artist..."
               className="input-search-form"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setInputValue && setInputValue(e.target.value)}
+                setInputValue && setInputValue(e.target.value)
+              }
             />
             <div className="search-button">
-              <button className="btn btn-search" aria-label="Search" type="submit">
+              <button
+                className="btn btn-search"
+                aria-label="Search"
+                type="submit"
+              >
                 <i className="mobile-icon-search hide-tablet"></i>
-                <span className="hide-in-mobile text-link">
-                  Search
-                </span>
+                <span className="hide-in-mobile text-link">Search</span>
               </button>
             </div>
           </form>
         </FormComponent>
       </header>
 
-      <main style={{ padding: '16px' }}>
+      <main style={{ padding: "16px" }}>
         <div>
-          {artistData && artistData.items.map((artist: any) => {
-            const profileSrc = artistProfile && artistProfile[Math.floor(Math.random() * artistProfile?.length)]?.url;
-            return (
-              <div key={artist.id}>
-                <a href={`/${artistId}`}>
-                  <div className="artist-profile">
-                    {profileSrc && <Image src={profileSrc} width={100} height={100} />}
-                    <p>{artist.name}</p>
-                    <span>ARTIST</span>
-                  </div>
-                </a>
-                <div>
-                  <h2>Songs</h2>
-                  <div className="songs">
-                    <ul className="songs-lists-container">
-                      {
-                        topTracks && topTracks.tracks.map((track: any, index: number) => {
-                          const imageSrc = track?.album?.images[Math.floor(Math.random() * track?.album?.images.length)]?.url || '';
-                          return (
-                            <li key={index} className="song-item">
-                              <div className="song-wrapper">
-                                <div className="img-container">
-                                  <button className="play-btn" id="play-btn" value={track.preview_url} onClick={(e:any) => {
-                                    setSong(e.target.value),
-                                    setPlyState();
-                                  }}>{isPlaying ? "playing" : "pause"}</button>
-                                  {imageSrc && <Image src={imageSrc} width={100} height={100} />}
+          {artistData &&
+            artistData.items.map((artist: any) => {
+              const profileSrc =
+                artistProfile &&
+                artistProfile[Math.floor(Math.random() * artistProfile?.length)]
+                  ?.url;
+              return (
+                <div key={artist.id}>
+                  <a href={`/${artistId}`}>
+                    <div className="artist-profile">
+                      {profileSrc && (
+                        <Image src={profileSrc} width={100} height={100} />
+                      )}
+                      <p>{artist.name}</p>
+                      <span>ARTIST</span>
+                    </div>
+                  </a>
+                  <div>
+                    <h2>Songs</h2>
+                    <div className="songs">
+                      <ul className="songs-lists-container">
+                        {topTracks &&
+                          topTracks.tracks.map((track: any, index: number) => {
+                            const imageSrc =
+                              track?.album?.images[
+                                Math.floor(
+                                  Math.random() * track?.album?.images.length
+                                )
+                              ]?.url || "";
+                            return (
+                              <li key={index} className="song-item">
+                                <div className="song-wrapper">
+                                  <div className="img-container">
+                                    <button
+                                      className="play-btn"
+                                      id="play-btn"
+                                      value={track.preview_url}
+                                      onClick={(e: any) => {
+                                        setSong(e.target.value), setPlyState();
+                                      }}
+                                    >
+                                      {isPlaying ? "playing" : "pause"}
+                                    </button>
+                                    {imageSrc && (
+                                      <Image
+                                        src={imageSrc}
+                                        width={100}
+                                        height={100}
+                                      />
+                                    )}
+                                  </div>
+                                  <div>
+                                    <p>{track.name}</p>
+                                    <Link href={`/${artistId}`}>
+                                      <a>{artist.name}</a>
+                                    </Link>
+                                  </div>
                                 </div>
-                                <div>
-                                  <p>{track.name}</p>
-                                  <Link href={`/${artistId}`}>
-                                    <a>{artist.name}</a>
-                                  </Link>
-                                </div>
-                              </div>
-                            </li>
-                          )
-                        })
-                      }
-                    </ul>
+                              </li>
+                            );
+                          })}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          }
-          )}
+              );
+            })}
         </div>
-        <Player 
-        audioSrc={song} 
-        />
-        <button type="button" value="asaa" onClick={() => console.log('next')}>next song</button>
+        <Player audioSrc={song} />
+        <button type="button" value="asaa" onClick={() => console.log("next")}>
+          next song
+        </button>
       </main>
-    </ AppContainer>
-  )
-}
+    </AppContainer>
+  );
+};
 
-export default Home
+export default Home;

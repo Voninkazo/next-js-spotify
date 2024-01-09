@@ -6,11 +6,23 @@ import { AppContainer, FormComponent } from "../styles/style";
 const About: NextPage = () => {
   return (
     <AppContainer>
-      {/* <Head>
-        <title>Spotify Music App</title>
-        <meta name="keywords" content="music, streaming, entertainment" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
+      <Head>
+        <title>About</title>
+        <meta
+          name="description"
+          content="About desc"
+        />
+        <meta
+          property="og:title"
+          content="About something"
+        />
+        <meta
+          property="og:description"
+          content="About desc"
+        />
+        <meta property="og:url" content="https://snipcart.com/" />
+        <meta property="og:type" content="website" />
+      </Head>
       <header className="header">
         <FormComponent>
           <form id="search-form">
