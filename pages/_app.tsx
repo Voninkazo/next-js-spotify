@@ -1,16 +1,21 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app';
-import { SongProvider } from '../context/context';
+// pages/_app.tsx
 
+import { AppProps } from "next/app";
+import Head from "next/head";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SongProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="utf-8" />
+        <meta name="keywords" content="Next.js, SEO, React" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Component {...pageProps} />
-    </SongProvider>
- )
+    </>
+  );
 }
 
-export default MyApp
-
-
+export default MyApp;

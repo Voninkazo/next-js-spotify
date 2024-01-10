@@ -1,37 +1,16 @@
-import React from "react";
-import type { NextPage } from "next";
-import { AppContainer, FormComponent } from "../styles/style";
+import Head from 'next/head';
 
-const About: NextPage = () => {
+const About = () => {
   return (
-    <AppContainer>
-      <header className="header">
-        <FormComponent>
-          <form id="search-form">
-            <input
-              type="search"
-              id="site-search"
-              name="q"
-              aria-label="Search for an artist..."
-            />
-            <div className="search-button">
-              <button
-                className="btn btn-search"
-                aria-label="Search"
-                type="submit"
-              >
-                <i className="mobile-icon-search hide-tablet"></i>
-                <span className="hide-in-mobile text-link">Search</span>
-              </button>
-            </div>
-          </form>
-        </FormComponent>
-      </header>
+    <div>
+      <Head>
+        <title>My Next.js App - About</title>
+        <meta name="description" content="Learn more about my Next.js app and its features." />
+      </Head>
 
-      <main style={{ padding: "16px" }}>
-        <div>Anything goes here</div>
-      </main>
-    </AppContainer>
+      <h1>About Page</h1>
+      <p>This is the about page content.</p>
+    </div>
   );
 };
 
